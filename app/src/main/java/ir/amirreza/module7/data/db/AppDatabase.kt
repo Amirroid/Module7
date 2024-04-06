@@ -36,7 +36,9 @@ abstract class AppDatabase : RoomDatabase() {
 
     class DatabaseCallback : Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
-            addData(db)
+            runCatching {
+                addData(db)
+            }
             super.onCreate(db)
         }
 
