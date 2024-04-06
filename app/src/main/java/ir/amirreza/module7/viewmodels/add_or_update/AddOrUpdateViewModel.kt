@@ -46,12 +46,12 @@ class AddOrUpdateViewModel : ViewModel() {
     fun initId(id: Int) = viewModelScope.launch(Dispatchers.IO) {
         runCatching {
             val well = dao.getWell(id).first()
+            currentId = well.well.wellId
             delay(1000)
             wellName = well.well.wellName
-            currentId = 0
             gasOilDepth = well.well.gasOilDepth.toString()
             capacity = well.well.capacity.toString()
-            _layers.update { well.layers }
+            _layers.update { it + well.layers }
         }
     }
 
@@ -80,6 +80,7 @@ class AddOrUpdateViewModel : ViewModel() {
             _layers.update {
                 it + WellLayersWithRockType(
                     layer = WellLayer(
+                        wellLayerId = 0,
                         wellId = 0,
                         rockTypeId = rockType!!.rockTypeId,
                         startPoint = fromInt,
@@ -120,7 +121,7 @@ class AddOrUpdateViewModel : ViewModel() {
                 val mappedLayers = _layers.value.map { it.layer.copy(wellId = well.toInt()) }
                 dao.insertWellLayers(mappedLayers)
             }
-            if (deletedLayers.isNotEmpty()) {
+            if (deletedLayers.isNotEmpty()){
                 dao.deleteLayer(deletedLayers)
             }
             withContext(Dispatchers.Main) {

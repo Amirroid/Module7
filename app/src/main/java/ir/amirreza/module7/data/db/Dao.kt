@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import ir.amirreza.module7.data.models.RockType
 import ir.amirreza.module7.data.models.Well
 import ir.amirreza.module7.data.models.WellData
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AppDao {
-    @Query("SELECT * FROM well WHERE wellId = :wellId")
+    @Query("SELECT * FROM well WHERE well.wellId = :wellId")
     @Transaction
     fun getWell(wellId: Int): Flow<WellData>
 
@@ -41,5 +42,5 @@ interface AppDao {
     fun getRockTypes(): Flow<List<RockType>>
 
     @Delete
-    fun deleteLayer(layers:List<WellLayer>)
+    fun deleteLayer(obj : List<WellLayer>)
 }

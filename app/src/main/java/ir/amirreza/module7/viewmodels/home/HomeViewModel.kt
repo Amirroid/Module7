@@ -35,7 +35,7 @@ class HomeViewModel : ViewModel() {
 
     fun getData(id: Int) = viewModelScope.launch(Dispatchers.IO) {
         dao.getWell(id).collectLatest { value ->
-            val newData = if (value.layers.last().layer.endPoint <= value.well.gasOilDepth) {
+            val newData = if (value.layers.isNotEmpty() && value.layers.last().layer.endPoint <= value.well.gasOilDepth) {
                 value.copy(
                     layers = value.layers + WellLayersWithRockType(
                         layer = WellLayer(
